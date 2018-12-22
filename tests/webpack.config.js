@@ -11,6 +11,7 @@ module.exports = {
         filename: "tests.bundle.js",
         path: resolve("./bin")
     },
+    mode: "development",
     target: "node",
     module: {
         rules: [

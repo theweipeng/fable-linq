@@ -1,11 +1,21 @@
-module Fable.Linq
-
+module Fable.Linq.Main
 open Fable.Core
+open Fable.Import.JS
+open Fable.Core
+open Fable.Import
 
-(************************************************)
-(*     You should remove the next lines and     *)
-(*    start writing your library in this file   *)
-(************************************************)
+type SimpleQueryBuilder() = 
+    member x.For(tz:List<'T>, f:'T -> 'T) : List<'T> = 
+        List.map (f) tz
+    member x.Yield(v:'T) : 'T = 
+        v
 
-[<Emit("$0 + $1")>]
-let add (x: int) (y: int) = jsNative
+    [<CustomOperation("where", MaintainsVariableSpace=true)>]
+    member x.Where ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool ) : List<'T> = 
+        source |> Browser.console.log
+        let ret = List.filter (f) source
+        ret.Length |> Browser.console.log
+        ret
+let fablequery = SimpleQueryBuilder()
+
+

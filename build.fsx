@@ -105,7 +105,7 @@ Target "DotnetBuild" (fun _ ->
 let fableWebpack workingDir =
     Yarn (fun p ->
         { p with
-            Command = YarnCommand.Custom ("build-tests")
+            Command = YarnCommand.Custom ("run build-tests")
             WorkingDirectory = workingDir
         })
 

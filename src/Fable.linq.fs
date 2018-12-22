@@ -1,4 +1,4 @@
-module Fable.linq
+module Fable.Linq
 
 open Fable.Core
 

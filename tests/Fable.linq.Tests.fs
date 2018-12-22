@@ -1,8 +1,8 @@
-module Fable.linq.Tests
+module Fable.Linq.Tests
 
 open Fable.Core
 open Fable.Core.JsInterop
-open Fable.linq
+open Fable.Linq
 open Fable.Core.Testing
 
 [<Global>]

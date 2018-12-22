@@ -6,7 +6,7 @@ function resolve(filePath) {
 }
 
 module.exports = {
-    entry: resolve("./Fable.Linq.Tests.fsproj"),
+    entry: resolve("./Fable.linq.Tests.fsproj"),
     output: {
         filename: "tests.bundle.js",
         path: resolve("./bin")

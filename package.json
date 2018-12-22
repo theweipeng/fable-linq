@@ -1,4 +1,7 @@
 {
+    "scripts": {
+        "build-tests": "./node_modules/webpack/bin/webpack.js --config ./tests/webpack.config.js"
+    },
     "private": true,
     "devDependencies": {
         "babel-core": "^6.26.3",

@@ -103,10 +103,11 @@ Target "DotnetBuild" (fun _ ->
 
 
 let fableWebpack workingDir =
-    DotNetCli.RunCommand(fun c ->
-        { c with WorkingDir = workingDir
-                 ToolPath = dotnetExePath }
-        ) "fable webpack --port free"
+    Yarn (fun p ->
+        { p with
+            Command = YarnCommand.Custom ("build-tests")
+            WorkingDirectory = workingDir
+        })
 
 let mocha args =
     Yarn(fun yarnParams ->

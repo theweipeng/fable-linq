@@ -20,8 +20,15 @@ type FableQueryBuilder() =
     
     [<CustomOperation("thenBy", MaintainsVariableSpace=true)>]
     member x.ThenBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key ) : List<'T> = 
-       List.sortByDescending (fun a -> f(a)) source 
+       List.sortBy (fun a -> f(a)) source 
 
+    [<CustomOperation("sortByDescending", MaintainsVariableSpace=true)>]
+    member x.SortByDescending ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key) : List<'T> = 
+       List.sortByDescending (fun a -> f(a)) source 
+    
+    [<CustomOperation("thenByDescending", MaintainsVariableSpace=true)>]
+    member x.ThenByDescending ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key) : List<'T> = 
+       List.sortByDescending (fun a -> f(a)) source 
 //'sortBy', 'thenBy', 'groupBy', 'groupValBy', 
 //'join', 'groupJoin', 'sumBy' and 'averageBy
 let fablequery = FableQueryBuilder()

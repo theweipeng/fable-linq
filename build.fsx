@@ -110,9 +110,11 @@ let fableWebpack workingDir =
         })
 
 let mocha args =
-    Yarn(fun yarnParams ->
-        { yarnParams with Command = args |> sprintf "run mocha -- %s" |> YarnCommand.Custom }
-    )
+    Yarn (fun p ->
+        { p with
+            Command = YarnCommand.Custom ("run testjs")
+            WorkingDirectory = args
+        })
 
 Target "MochaTest" (fun _ ->
     !! testsGlob
@@ -120,10 +122,7 @@ Target "MochaTest" (fun _ ->
         let projDir = proj |> DirectoryName
         //Compile to JS
         fableWebpack projDir
-
-        //Run mocha tests
-        let projDirOutput = projDir </> "bin"
-        mocha projDirOutput
+        mocha projDir
     )
 
 )

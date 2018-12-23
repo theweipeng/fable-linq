@@ -63,3 +63,15 @@ it "order descending works" <| fun () ->
     Assert.AreEqual(y.[2].a, 7)
     Assert.AreEqual(y.[1].a, 8)
     Assert.AreEqual(y.[0].a, 9)
+
+it "all works" <| fun () ->
+    let x = [4;7;9;5;8]
+    let y = fablequery {
+        for s in x do 
+        select {
+            a = s
+        }
+        all (s.a = 4)
+    }
+    Assert.AreEqual(y, true)
+    

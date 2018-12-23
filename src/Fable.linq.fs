@@ -38,9 +38,9 @@ type FableQueryBuilder() =
     member x.GroupBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key)  = 
        List.groupBy (fun a -> f(a)) source 
     
-    [<CustomOperation("groupValBy", MaintainsVariableSpace=true)>]
-    member x.GroupValBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key)  = 
-       List.groupBy (fun a -> f(a)) source 
+    [<CustomOperation("all", MaintainsVariableSpace=true)>]
+    member x.All ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
+       List.exists (fun a -> f(a) |> not) source  |> not
 //'sortBy', 'thenBy', 'groupBy', 'groupValBy', 
 //'join', 'groupJoin', 'sumBy' and 'averageBy
 let fablequery = FableQueryBuilder()

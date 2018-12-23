@@ -8,7 +8,7 @@ open Fable.Core.Testing
 [<Global>]
 let it (msg: string) (f: unit->unit): unit = jsNative
 
-it "Adding works" <| fun () ->
+it "where works" <| fun () ->
     let x = [1;2;3;4;5;6;7;8]
     let y = fablequery {
         for s in x do 

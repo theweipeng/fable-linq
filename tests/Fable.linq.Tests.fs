@@ -76,7 +76,7 @@ it "all works" <| fun () ->
     Assert.AreEqual(y, false)
     let m = [4;4;4;4;4]
     let k = fablequery {
-        for s in x do 
+        for s in m do 
         select {
             a = s
         }

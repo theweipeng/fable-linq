@@ -9,7 +9,7 @@ open Fable.Linq.Main
 ## Minimal example
 
 ```Fsharp
-open Fable.Rx.ImportHelper
+open Fable.Linq.Main
 
 let x = [4;7;9;5;8]
 let y = fablequery {

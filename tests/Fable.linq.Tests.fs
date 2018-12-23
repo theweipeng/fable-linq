@@ -73,5 +73,14 @@ it "all works" <| fun () ->
         }
         all (s.a = 4)
     }
-    Assert.AreEqual(y, true)
+    Assert.AreEqual(y, false)
+    let m = [4;4;4;4;4]
+    let k = fablequery {
+        for s in x do 
+        select {
+            a = s
+        }
+        all (s.a = 4)
+    }
+    Assert.AreEqual(k, true)
     

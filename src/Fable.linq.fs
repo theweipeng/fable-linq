@@ -92,7 +92,6 @@ type FableQueryBuilder() =
    // member this.LeftOuterJoin : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> seq<'Inner> -> 'Result) -> QuerySource<'Result,'Q> = jsNative
    // member this.MaxByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
    // member this.MinByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
-   // member this.Nth : List<'T> * int -> 'T = jsNative
    // member this.Quote : Expr<'T> -> Expr<'T> = jsNative
    // member this.Run : Expr<QuerySource<'T,IQueryable>> -> IQueryable<'T> = jsNative
    // member this.SortByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
@@ -103,17 +102,20 @@ type FableQueryBuilder() =
    // member this.SumByNullable : List<'T> * ('T -> Nullable<^Value>) -> Nullable<^Value> = jsNative
    // member this.ThenByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
-   // member this.Yield : 'T -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
 
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
    member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.minBy f source
-
+      
    [<CustomOperation("maxBy", MaintainsVariableSpace=true)>]
    member x.MaxBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.maxBy f source
+   
+   [<CustomOperation("nth", MaintainsVariableSpace=true)>]
+   member x.Nth (source:List<'T>, [<ProjectionParameter>] i: int)  = 
+      List.item i source 
 
    [<CustomOperation("head", MaintainsVariableSpace=true)>]
    member x.Head ()  = 

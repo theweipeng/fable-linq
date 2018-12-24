@@ -3,7 +3,6 @@ open Fable.Core.Exceptions
 open Microsoft.FSharp.Quotations
 
 
-
 type FableQueryBuilder() = 
    member x.For(tz:List<'T>, f:'T -> 'T) : List<'T> = 
       List.map (f) tz
@@ -35,25 +34,34 @@ type FableQueryBuilder() =
       List.sortByDescending f source 
    
    [<CustomOperation("sumBy", MaintainsVariableSpace=true)>]
-   member x.SumBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U) : 'U when 
-               'U :  (static member (+) : ^T * ^T -> ^T) 
-               and 'U : (static member Zero : unit-> List<'T>)  = 
-      null //todo
+   member x.SumBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U ) = 
+      match source with 
+         | [] ->  LanguagePrimitives.GenericZero< 'U >
+         | t ->
+             let mutable acc = LanguagePrimitives.GenericZero< 'U >
+             for x in t do
+                 acc <- Checked.(+) acc (f x)
+             acc
 
    [<CustomOperation("groupBy", MaintainsVariableSpace=true)>]
    member x.GroupBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key)  = 
       List.groupBy f source 
-    
+      
    [<CustomOperation("all", MaintainsVariableSpace=true)>]
    member x.All ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
       List.exists (fun a -> a |> (f >> not)) source  |> not
      
    [<CustomOperation("averageBy", MaintainsVariableSpace=true)>]
-   member x.AverageBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U): 'U  when 
-               'U :  (static member (+) : ^T * ^T -> ^T) 
-               and 'U : (static member DivideByInt : ^T * ^T -> ^T) 
-               and 'U : (static member Zero : unit-> List<'T>)  = 
-      null
+   member x.AverageBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U) = 
+      match source with 
+         | [] -> invalidArg "source" LanguagePrimitives.ErrorStrings.InputSequenceEmptyString
+         | xs ->
+             let mutable sum = LanguagePrimitives.GenericZero< 'U >
+             let mutable count = 0
+             for x in xs do
+                 sum <- Checked.(+) sum (f x)
+                 count <- count + 1
+             LanguagePrimitives.DivideByInt sum count
 
 
    [<CustomOperation("contains", MaintainsVariableSpace=true)>]
@@ -108,7 +116,7 @@ type FableQueryBuilder() =
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
    member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.minBy f source
-      
+
    [<CustomOperation("maxBy", MaintainsVariableSpace=true)>]
    member x.MaxBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.maxBy f source

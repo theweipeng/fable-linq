@@ -1,4 +1,5 @@
 module Fable.Linq.Main
+open Fable.Core.Exceptions
 
 
 
@@ -74,8 +75,52 @@ type FableQueryBuilder() =
    member x.ExactlyOneOrDefault ( source:List<'T>)  = 
       List.exactlyOne source  //todo
        
-//'sortBy', 'thenBy', 'groupBy', 'groupValBy', 
-//'join', 'groupJoin', 'sumBy' and 'averageBy
+   [<CustomOperation("exists", MaintainsVariableSpace=true)>]
+   member x.Exists ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
+      List.exists f source
+       
+   [<CustomOperation("find", MaintainsVariableSpace=true)>]
+   member x.Find ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
+      List.find f source
+
+   // member this.GroupJoin : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> seq<'Inner> -> 'Result) -> QuerySource<'Result,'Q> = jsNative
+   // member this.GroupValBy : List<'T> * ('T -> 'Value) * ('T -> 'Key) -> QuerySource<IGrouping<'Key,'Value>,'Q> = jsNative
+   // member this.Head : List<'T> -> 'T = jsNative
+   // member this.HeadOrDefault : List<'T> -> 'T = jsNative
+   // member this.Join : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> 'Inner -> 'Result) -> QuerySource<'Result,'Q> = jsNative
+   // member this.Last : List<'T> -> 'T = jsNative
+   // member this.LastOrDefault : List<'T> -> 'T = jsNative
+   // member this.LeftOuterJoin : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> seq<'Inner> -> 'Result) -> QuerySource<'Result,'Q> = jsNative
+   // member this.MaxBy : List<'T> * ('T -> 'Value) -> 'Value = jsNative
+   // member this.MaxByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
+   // member this.MinBy : List<'T> * ('T -> 'Value) -> 'Value = jsNative
+   // member this.MinByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
+   // member this.Nth : List<'T> * int -> 'T = jsNative
+   // member this.Quote : Expr<'T> -> Expr<'T> = jsNative
+   // member this.Run : Expr<QuerySource<'T,IQueryable>> -> IQueryable<'T> = jsNative
+   // member this.Select : List<'T> * ('T -> 'Result) -> QuerySource<'Result,'Q> = jsNative
+   // member this.Skip : List<'T> * int -> List<'T> = jsNative
+   // member this.SkipWhile : List<'T> * ('T -> bool) -> List<'T> = jsNative
+   // member this.SortBy : List<'T> * ('T -> 'Key) -> List<'T> = jsNative
+   // member this.SortByDescending : List<'T> * ('T -> 'Key) -> List<'T> = jsNative
+   // member this.SortByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
+   // member this.SortByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
+   // member this.Source : IEnumerable<'T> -> QuerySource<'T,IEnumerable> = jsNative
+   // member this.Source : IQueryable<'T> -> List<'T> = jsNative
+   // member this.SumBy : List<'T> * ('T -> ^Value) -> ^Value = jsNative
+   // member this.SumByNullable : List<'T> * ('T -> Nullable<^Value>) -> Nullable<^Value> = jsNative
+   // member this.Take : List<'T> * int -> List<'T> = jsNative
+   // member this.TakeWhile : List<'T> * ('T -> bool) -> List<'T> = jsNative
+   // member this.ThenBy : List<'T> * ('T -> 'Key) -> List<'T> = jsNative
+   // member this.ThenByDescending : List<'T> * ('T -> 'Key) -> List<'T> = jsNative
+   // member this.ThenByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
+   // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
+   // member this.Where : List<'T> * ('T -> bool) -> List<'T> = jsNative
+   // member this.Yield : 'T -> List<'T> = jsNative
+   // member this.YieldFrom : List<'T> -> List<'T> = jsNative
+   // member this.Zero : unit -> List<'T> = jsNative
+
+
 let fablequery = FableQueryBuilder()
 
 let m = query {

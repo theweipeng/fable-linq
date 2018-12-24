@@ -1,5 +1,6 @@
 module Fable.Linq.Main
 open Fable.Core.Exceptions
+open Microsoft.FSharp.Quotations
 
 
 
@@ -89,9 +90,7 @@ type FableQueryBuilder() =
    // member this.Join : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> 'Inner -> 'Result) -> QuerySource<'Result,'Q> = jsNative
    // member this.LastOrDefault : List<'T> -> 'T = jsNative
    // member this.LeftOuterJoin : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> seq<'Inner> -> 'Result) -> QuerySource<'Result,'Q> = jsNative
-   // member this.MaxBy : List<'T> * ('T -> 'Value) -> 'Value = jsNative
    // member this.MaxByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
-   // member this.MinBy : List<'T> * ('T -> 'Value) -> 'Value = jsNative
    // member this.MinByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
    // member this.Nth : List<'T> * int -> 'T = jsNative
    // member this.Quote : Expr<'T> -> Expr<'T> = jsNative
@@ -106,6 +105,15 @@ type FableQueryBuilder() =
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.Yield : 'T -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
+
+      
+   [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
+   member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
+      List.minBy f source
+
+   [<CustomOperation("maxBy", MaintainsVariableSpace=true)>]
+   member x.MaxBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
+      List.maxBy f source
 
    [<CustomOperation("head", MaintainsVariableSpace=true)>]
    member x.Head ()  = 

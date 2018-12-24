@@ -61,6 +61,18 @@ type FableQueryBuilder() =
    [<CustomOperation("count", MaintainsVariableSpace=true)>]
    member x.Count ( source:List<'T>)  = 
       source.Length
+   
+   [<CustomOperation("distinct", MaintainsVariableSpace=true)>]
+   member x.Distinct ( source:List<'T>)  = 
+      List.distinct source
+   
+   [<CustomOperation("exactlyOne", MaintainsVariableSpace=true)>]
+   member x.ExactlyOne ( source:List<'T>)  = 
+      List.exactlyOne source
+   
+   [<CustomOperation("exactlyOneOrDefault", MaintainsVariableSpace=true)>]
+   member x.ExactlyOneOrDefault ( source:List<'T>)  = 
+      List.exactlyOne source  //todo
        
 //'sortBy', 'thenBy', 'groupBy', 'groupValBy', 
 //'join', 'groupJoin', 'sumBy' and 'averageBy

@@ -12,35 +12,45 @@ type FableQueryBuilder() =
 
     [<CustomOperation("select", MaintainsVariableSpace=true)>]
     member x.Select ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'T2 ) : List<'T2> = 
-       List.map (fun a -> f(a)) source 
+       List.map f source 
 
     [<CustomOperation("sortBy", MaintainsVariableSpace=true)>]
     member x.SortBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key) : List<'T> = 
-       List.sortBy (fun a -> f(a)) source 
+       List.sortBy f source 
     
     [<CustomOperation("thenBy", MaintainsVariableSpace=true)>]
     member x.ThenBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key ) : List<'T> = 
-       List.sortBy (fun a -> f(a)) source 
+       List.sortBy f source 
 
     [<CustomOperation("sortByDescending", MaintainsVariableSpace=true)>]
     member x.SortByDescending ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key) : List<'T> = 
-       List.sortByDescending (fun a -> f(a)) source 
+       List.sortByDescending f source 
     
     [<CustomOperation("thenByDescending", MaintainsVariableSpace=true)>]
     member x.ThenByDescending ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key) : List<'T> = 
-       List.sortByDescending (fun a -> f(a)) source 
+       List.sortByDescending f source 
    
     [<CustomOperation("sumBy", MaintainsVariableSpace=true)>]
-    member x.SumBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> int) : int = 
-       List.sumBy (fun a -> f(a)) source 
+    member x.SumBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U) : 'U when 
+               'U :  (static member (+) : ^T * ^T -> ^T) 
+               and 'U : (static member Zero : unit-> List<'T>)  = 
+       List.sumBy f source 
 
     [<CustomOperation("groupBy", MaintainsVariableSpace=true)>]
     member x.GroupBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key)  = 
-       List.groupBy (fun a -> f(a)) source 
+       List.groupBy f source 
     
     [<CustomOperation("all", MaintainsVariableSpace=true)>]
     member x.All ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
-       List.exists (fun a -> f(a) |> not) source  |> not
+       List.exists (fun a -> a |> (f >> not)) source  |> not
+     
+    [<CustomOperation("averageBy", MaintainsVariableSpace=true)>]
+    member x.AverageBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U): 'U  when 
+               'U :  (static member (+) : ^T * ^T -> ^T) 
+               and 'U : (static member DivideByInt : ^T * ^T -> ^T) 
+               and 'U : (static member Zero : unit-> List<'T>)  = 
+       List.averageBy f source
+       
 //'sortBy', 'thenBy', 'groupBy', 'groupValBy', 
 //'join', 'groupJoin', 'sumBy' and 'averageBy
 let fablequery = FableQueryBuilder()

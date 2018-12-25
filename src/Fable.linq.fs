@@ -1,7 +1,4 @@
 module Fable.Linq.Main
-open Fable.Core.Exceptions
-open Microsoft.FSharp.Quotations
-
 
 type FableQueryBuilder() = 
    member x.For(tz:List<'T>, f:'T -> 'T) : List<'T> = 
@@ -112,14 +109,14 @@ type FableQueryBuilder() =
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
    [<CustomOperation("join", IsLikeJoin=true)>]
-   member x.Join (outer : List<'T1>, inner: List<'T2>, outerKeySelector, innerKeySelector, resultSelector)  = 
+   member x.Join (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector)  = 
       let mutable ret = []
       for x in outer do
          let m = inner |> List.find (fun y -> 
             outerKeySelector x = innerKeySelector y
          ) 
          if Some(m).IsNone |> not then
-            ret <- List.append ret (resultSelector x m)
+            ret <-  List.append ret (resultSelector m x)
       ret
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
@@ -162,17 +159,11 @@ type FableQueryBuilder() =
    member x.Zero ()  = 
       List.empty
 
-let ``When 2 is added tos 2 expect 4``() =
-      2 + 2 = 4
-
 let fablequery = FableQueryBuilder()
+let b = [2]
 
-type ret2 = {
-   m: int
-   k: int
-}
-let mj = fablequery {
+let m = fablequery {
    for a in [1] do
-   join j in [2;3;4] on (a=j) 
-   select a
+   join j in b on (a = j) 
+   count
 } 

@@ -117,7 +117,7 @@ type FableQueryBuilder() =
             outerKeySelector x = innerKeySelector y
          ) 
          if Some(m).IsNone |> not then
-            ret <-  List.append ret [(resultSelector m x)]
+            ret <-  (resultSelector m x) :: ret
       ret
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]

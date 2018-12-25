@@ -110,14 +110,14 @@ type FableQueryBuilder() =
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
    [<CustomOperation("join", IsLikeJoin=true)>]
-   member x.Join (outer : List<'T>, inner: List<'T>, f1: 'T -> 'Key, f2: 'T -> 'Key, f3: ('T * 'T) -> 'U)  = 
+   member x.Join (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector)  = 
       let mutable ret = []
       for x in outer do
          let m = inner |> List.find (fun y -> 
-            f1 x = f2 y
+            outerKeySelector x = innerKeySelector y
          ) 
          if Some(m).IsNone |> not then
-            ret <-  List.append ret (f3 (m ,x))
+            ret <-  List.append ret (resultSelector m x)
       ret
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
@@ -163,7 +163,7 @@ type FableQueryBuilder() =
 let fablequery = FableQueryBuilder()
 let b = [2]
 
-let m = query {
+let m = fablequery {
    for a in [1] do
    join j in b on (a = j) 
    select a

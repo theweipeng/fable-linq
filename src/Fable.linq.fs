@@ -1,4 +1,5 @@
 module Fable.Linq.Main
+open System.Linq
 
 type FableQueryBuilder() = 
    member x.For(tz:List<'T>, f:'T -> 'T) : List<'T> = 
@@ -109,14 +110,14 @@ type FableQueryBuilder() =
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
    [<CustomOperation("join", IsLikeJoin=true)>]
-   member x.Join (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector)  = 
+   member x.Join (outer : List<'T>, inner: List<'T>, f1: 'T -> 'Key, f2: 'T -> 'Key, f3: ('T * 'T) -> 'Key)  = 
       let mutable ret = []
       for x in outer do
          let m = inner |> List.find (fun y -> 
-            outerKeySelector x = innerKeySelector y
+            f1 x = f2 y
          ) 
          if Some(m).IsNone |> not then
-            ret <-  List.append ret (resultSelector m x)
+            ret <-  List.append ret (f3 (m ,x))
       ret
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
@@ -162,8 +163,8 @@ type FableQueryBuilder() =
 let fablequery = FableQueryBuilder()
 let b = [2]
 
-let m = fablequery {
+let m = query {
    for a in [1] do
    join j in b on (a = j) 
-   count
+   select a
 } 

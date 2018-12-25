@@ -149,8 +149,8 @@ type FableQueryBuilder() =
       List.skipWhile f source
 
    [<CustomOperation("take", MaintainsVariableSpace=true)>]
-   member x.Take (v:int)  = 
-      List.take v
+   member x.Take (source:List<'T>, v:int)  = 
+      List.take v source
 
    [<CustomOperation("takeWhile", MaintainsVariableSpace=true)>]
    member x.TakeWhile (source:List<'T>, f:'T -> bool)  = 
@@ -166,5 +166,5 @@ let b = [2]
 let m = fablequery {
    for a in [1] do
    join j in b on (a = j) 
-   select a
+   take 1
 } 

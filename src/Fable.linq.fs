@@ -110,7 +110,7 @@ type FableQueryBuilder() =
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
    [<CustomOperation("join", IsLikeJoin=true)>]
-   member x.Join (outer : List<'T>, inner: List<'T>, f1: 'T -> 'Key, f2: 'T -> 'Key, f3: ('T * 'T) -> 'Key)  = 
+   member x.Join (outer : List<'T>, inner: List<'T>, f1: 'T -> 'Key, f2: 'T -> 'Key, f3: ('T * 'T) -> 'U)  = 
       let mutable ret = []
       for x in outer do
          let m = inner |> List.find (fun y -> 

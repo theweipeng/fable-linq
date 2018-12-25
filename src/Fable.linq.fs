@@ -61,7 +61,7 @@ type FableQueryBuilder() =
              for x in xs do
                  sum <- Checked.(+) sum (f x)
                  count <- count + 1
-             LanguagePrimitives.DivideByInt sum count
+             sum 
 
 
    [<CustomOperation("contains", MaintainsVariableSpace=true)>]
@@ -111,7 +111,16 @@ type FableQueryBuilder() =
    // member this.ThenByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
-
+   [<CustomOperation("join", IsLikeJoin=true)>]
+   member x.Join (outer : List<'T1>, inner: List<'T2>, outerKeySelector, innerKeySelector, resultSelector)  = 
+      let mutable ret = []
+      for x in outer do
+         let m = inner |> List.find (fun y -> 
+            outerKeySelector x = innerKeySelector y
+         ) 
+         if Some(m).IsNone |> not then
+            ret <- List.append ret (resultSelector x m)
+      ret
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
    member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
@@ -153,10 +162,17 @@ type FableQueryBuilder() =
    member x.Zero ()  = 
       List.empty
 
+let ``When 2 is added tos 2 expect 4``() =
+      2 + 2 = 4
+
 let fablequery = FableQueryBuilder()
 
-let m = query {
-   for a in [1] do
-   
-   count 
+type ret2 = {
+   m: int
+   k: int
 }
+let mj = fablequery {
+   for a in [1] do
+   join j in [2;3;4] on (a=j) 
+   select a
+} 

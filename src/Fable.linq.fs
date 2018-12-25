@@ -117,6 +117,17 @@ type FableQueryBuilder() =
          if Some(m).IsNone |> not then
             ret <-  (resultSelector m x) :: ret
       ret
+   
+   [<CustomOperation("groupJoin", IsLikeGroupJoin=true)>]
+   member x.GroupJoin (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> 'T -> 'T * 'T)  = 
+      let mutable ret = []
+      for x in outer do
+         let m = inner |> List.find (fun y -> 
+            outerKeySelector x = innerKeySelector y
+         ) 
+         if Some(m).IsNone |> not then
+            ret <-  (resultSelector m x) :: ret
+      ret
       
    [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
    member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
@@ -163,6 +174,6 @@ let b = [2]
 
 let m = fablequery {
    for a in [1] do
-   join j in b on (a = j) 
-   take 1
+   groupJoin j in b on (a = j) into s
+   select s
 } 

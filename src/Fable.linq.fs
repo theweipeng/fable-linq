@@ -196,5 +196,5 @@ let m = fablequery {
    for a in b do
    join bb in s on (a.a = bb.a) 
    groupValBy a a.a into group
-   select 0
+   select group
 } 

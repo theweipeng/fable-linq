@@ -41,7 +41,7 @@ type FableQueryBuilder() =
                  acc <- Checked.(+) acc (f x)
              acc
 
-   [<CustomOperation("groupBy", MaintainsVariableSpace=true)>]
+   [<CustomOperation("groupBy", AllowIntoPattern=true, MaintainsVariableSpace=true)>]
    member x.GroupBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'Key)  = 
       List.groupBy f source 
       
@@ -107,8 +107,8 @@ type FableQueryBuilder() =
    // member this.ThenByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
-   [<CustomOperation("join", IsLikeJoin=true)>]
-   member x.Join (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> 'T -> 'T * 'T)  = 
+   [<CustomOperation("join", IsLikeJoin=true, MaintainsVariableSpace=true)>]
+   member x.Join (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'T * 'T)  = 
       let mutable ret = []
       for x in outer do
          let m = inner |> List.find (fun y -> 
@@ -118,11 +118,12 @@ type FableQueryBuilder() =
             ret <-  (resultSelector m x) :: ret
       ret
    
-   [<CustomOperation("groupValBy", IsLikeJoin=true)>]
-   member x.GroupValBy (outer : List<'T>, f1: ('T -> 'Value),  f2: ('T -> 'Key)): List<IGrouping<'Key,'Value>>  = 
-      null
+   [<CustomOperation("groupValBy", AllowIntoPattern=true, MaintainsVariableSpace=true)>]
+   member x.GroupValBy<'T,'Key,'Result when 'Key : equality > (source:List<'T>, [<ProjectionParameter>]resultSelector: 'T -> 'Result, [<ProjectionParameter>]keySelector: 'T -> 'Key) : List<IGrouping<'Key,'Result>>   = 
+      []
 
-   [<CustomOperation("groupJoin", IsLikeGroupJoin=true)>]
+
+   [<CustomOperation("groupJoin", IsLikeGroupJoin=true, MaintainsVariableSpace=true)>]
    member x.GroupJoin (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> 'T -> 'T * 'T)  = 
       let mutable ret = []
       for x in outer do
@@ -133,51 +134,67 @@ type FableQueryBuilder() =
             ret <-  (resultSelector m x) :: ret
       ret
       
-   [<CustomOperation("minBy", MaintainsVariableSpace=true)>]
+   [<CustomOperation("minBy")>]
    member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.minBy f source
 
-   [<CustomOperation("maxBy", MaintainsVariableSpace=true)>]
+   [<CustomOperation("maxBy")>]
    member x.MaxBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.maxBy f source
    
-   [<CustomOperation("nth", MaintainsVariableSpace=true)>]
+   [<CustomOperation("nth")>]
    member x.Nth (source:List<'T>, [<ProjectionParameter>] i: int)  = 
       List.item i source 
 
-   [<CustomOperation("head", MaintainsVariableSpace=true)>]
+   [<CustomOperation("head")>]
    member x.Head ()  = 
       List.head
 
-   [<CustomOperation("last", MaintainsVariableSpace=true)>]
+   [<CustomOperation("last")>]
    member x.Last ()  = 
       List.last
 
-   [<CustomOperation("skip", MaintainsVariableSpace=true)>]
+   [<CustomOperation("skip")>]
    member x.Skip (v:int)  = 
       List.skip v
    
-   [<CustomOperation("skipWhile", MaintainsVariableSpace=true)>]
+   [<CustomOperation("skipWhile")>]
    member x.SkipWhile (source:List<'T>, f:'T -> bool)  = 
       List.skipWhile f source
 
-   [<CustomOperation("take", MaintainsVariableSpace=true)>]
+   [<CustomOperation("take")>]
    member x.Take (source:List<'T>, v:int)  = 
       List.take v source
 
-   [<CustomOperation("takeWhile", MaintainsVariableSpace=true)>]
+   [<CustomOperation("takeWhile")>]
    member x.TakeWhile (source:List<'T>, f:'T -> bool)  = 
       List.takeWhile f source
 
-   [<CustomOperation("zero", MaintainsVariableSpace=true)>]
+   [<CustomOperation("zero")>]
    member x.Zero ()  = 
       List.empty
 
+   member x.Return() =
+      []
+   
+   member x.Bind() =
+      []
 let fablequery = FableQueryBuilder()
-let b = [2]
+
+type m = {
+   a: int
+   b: string
+}
+type t = {
+   source: int
+   value: string
+}
+let b = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
+let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 
 let m = fablequery {
-   for a in [1] do
-   groupJoin j in b on (a = j) into s
-   select s
+   for a in b do
+   join bb in s on (a.a = bb.a) 
+   groupValBy a a.a into group
+   select 0
 } 

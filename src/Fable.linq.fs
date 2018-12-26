@@ -108,7 +108,7 @@ type FableQueryBuilder() =
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.YieldFrom : List<'T> -> List<'T> = jsNative
    [<CustomOperation("join", IsLikeJoin=true, MaintainsVariableSpace=true)>]
-   member x.Join (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'T * 'T)  = 
+   member x.Join (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'U)  = 
       let mutable ret = []
       for x in outer do
          let m = inner |> List.find (fun y -> 
@@ -186,8 +186,8 @@ type m = {
    b: string
 }
 type t = {
-   source: int
-   value: string
+   mutable source: int
+   mutable value: string
 }
 let b = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
@@ -195,6 +195,7 @@ let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 let m = fablequery {
    for a in b do
    join bb in s on (a.a = bb.a) 
-   groupValBy {source=a.a; value=bb.b} a.a into group
+   let haha = {source=a.a; value=bb.b}
+   groupValBy haha a.a into group
    select group
 } 

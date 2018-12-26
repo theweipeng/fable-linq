@@ -195,6 +195,6 @@ let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 let m = fablequery {
    for a in b do
    join bb in s on (a.a = bb.a) 
-   groupValBy a a.a into group
+   groupValBy {source=a.a; value=bb.b} a.a into group
    select group
 } 

@@ -1,6 +1,9 @@
 module Fable.Linq.Main
 open System.Linq
 
+
+
+
 type FableQueryBuilder() = 
    member x.For(tz:List<'T>, f:'T -> 'T) : List<'T> = 
       List.map (f) tz
@@ -119,9 +122,13 @@ type FableQueryBuilder() =
       ret
    
    [<CustomOperation("groupValBy", AllowIntoPattern=true, MaintainsVariableSpace=true)>]
-   member x.GroupValBy<'T,'Key,'Result when 'Key : equality > (source:List<'T>, [<ProjectionParameter>]resultSelector: 'T -> 'Result, [<ProjectionParameter>]keySelector: 'T -> 'Key) : List<IGrouping<'Key,'Result>>   = 
-      []
-
+   member x.GroupValBy<'T,'Key,'Result when 'Key : equality > (source:List<'T>, [<ProjectionParameter>]resultSelector: 'T -> 'Result, [<ProjectionParameter>]keySelector: 'T -> 'Key)    = 
+      let groupRet = source |> List.groupBy keySelector
+      let mutable ret = []
+      for x in groupRet do
+         match x with
+            | (a, b) -> ret <- [(a, List.map resultSelector b)]
+      ret
 
    [<CustomOperation("groupJoin", IsLikeGroupJoin=true, MaintainsVariableSpace=true)>]
    member x.GroupJoin (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> 'T -> 'T * 'T)  = 
@@ -192,10 +199,10 @@ type t = {
 let b = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 
-let m = fablequery {
+let mb = fablequery {
    for a in b do
    join bb in s on (a.a = bb.a) 
-   let haha = {source=a.a; value=bb.b}
-   groupValBy haha a.a into group
+   groupValBy  {source=a.a; value=bb.b} a.a into group
    select group
 } 
+

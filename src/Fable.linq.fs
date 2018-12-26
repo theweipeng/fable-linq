@@ -118,6 +118,10 @@ type FableQueryBuilder() =
             ret <-  (resultSelector m x) :: ret
       ret
    
+   [<CustomOperation("groupValBy", IsLikeJoin=true)>]
+   member x.GroupValBy (outer : List<'T>, f1: ('T -> 'Value),  f2: ('T -> 'Key)): List<IGrouping<'Key,'Value>>  = 
+      null
+
    [<CustomOperation("groupJoin", IsLikeGroupJoin=true)>]
    member x.GroupJoin (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> 'T -> 'T * 'T)  = 
       let mutable ret = []

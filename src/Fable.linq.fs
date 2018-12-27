@@ -121,6 +121,16 @@ type FableQueryBuilder() =
             ret <-  (resultSelector m x) :: ret
       ret
    
+   [<CustomOperation("leftOuterJoin", IsLikeGroupJoin=true)>]
+   member x.LeftOuterJoin (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'U)  = 
+      let mutable ret = []
+      for x in outer do
+         let m = inner |> List.find (fun y -> 
+            outerKeySelector x = innerKeySelector y
+         ) 
+         ret <-  (resultSelector m x) :: ret
+      ret
+   
    [<CustomOperation("groupValBy", AllowIntoPattern=true, MaintainsVariableSpace=true)>]
    member x.GroupValBy<'T,'Key,'Result when 'Key : equality > (source:List<'T>, [<ProjectionParameter>]resultSelector: 'T -> 'Result, [<ProjectionParameter>]keySelector: 'T -> 'Key)    = 
       let groupRet = source |> List.groupBy keySelector
@@ -196,8 +206,7 @@ let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 
 let mb = fablequery {
    for a in b do
-   join bb in s on (a.a = bb.a) 
-   groupValBy  {source=a.a; value=bb.b} a.a into group
+   leftOuterJoin bb in s on (a.a = bb.a)  into group
    select group
 } 
 

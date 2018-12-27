@@ -181,11 +181,6 @@ type FableQueryBuilder() =
    member x.Zero ()  = 
       List.empty
 
-   member x.Return() =
-      []
-   
-   member x.Bind() =
-      []
 let fablequery = FableQueryBuilder()
 
 type m = {

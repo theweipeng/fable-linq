@@ -1,7 +1,4 @@
 module Fable.Linq.Main
-open System.Linq
-
-
 
 
 type FableQueryBuilder() = 
@@ -93,19 +90,14 @@ type FableQueryBuilder() =
    member x.Find ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
       List.find f source
 
-   // member this.GroupJoin : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> seq<'Inner> -> 'Result) -> QuerySource<'Result,'Q> = jsNative
-   // member this.GroupValBy : List<'T> * ('T -> 'Value) * ('T -> 'Key) -> QuerySource<IGrouping<'Key,'Value>,'Q> = jsNative
    // member this.HeadOrDefault : List<'T> -> 'T = jsNative
    // member this.LastOrDefault : List<'T> -> 'T = jsNative
-   // member this.LeftOuterJoin : QuerySource<'Outer,'Q> * QuerySource<'Inner,'Q> * ('Outer -> 'Key) * ('Inner -> 'Key) * ('Outer -> seq<'Inner> -> 'Result) -> QuerySource<'Result,'Q> = jsNative
    // member this.MaxByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
    // member this.MinByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
    // member this.Quote : Expr<'T> -> Expr<'T> = jsNative
    // member this.Run : Expr<QuerySource<'T,IQueryable>> -> IQueryable<'T> = jsNative
    // member this.SortByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.SortByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
-   // member this.Source : IEnumerable<'T> -> QuerySource<'T,IEnumerable> = jsNative
-   // member this.Source : IQueryable<'T> -> List<'T> = jsNative
    // member this.SumByNullable : List<'T> * ('T -> Nullable<^Value>) -> Nullable<^Value> = jsNative
    // member this.ThenByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
    // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
@@ -206,7 +198,8 @@ let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 
 let mb = fablequery {
    for a in b do
-   leftOuterJoin bb in s on (a.a = bb.a)  into group
+   leftOuterJoin bb in s on (a.a = bb.a)  into group 
+   
    select group
 } 
 

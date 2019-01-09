@@ -1,7 +1,7 @@
 {
     "scripts": {
-        "build-tests": "./node_modules/webpack/bin/webpack.js --config ./tests/webpack.config.js",
-        "testjs": "./node_modules/mocha/bin/mocha ./tests/bin/tests.bundle.js"
+        "build-tests": "node ./node_modules/webpack/bin/webpack.js --config ./tests/webpack.config.js",
+        "testjs": "node ./node_modules/mocha/bin/mocha ./tests/bin/tests.bundle.js"
     },
     "private": true,
     "devDependencies": {

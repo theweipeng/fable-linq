@@ -50,21 +50,21 @@ type FableQueryBuilder() =
       List.exists (fun a -> a |> (f >> not)) source  |> not
      
    [<CustomOperation("averageBy", MaintainsVariableSpace=true)>]
-   member x.AverageBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> 'U) = 
+   member x.AverageBy ( source:List<'T>, [<ProjectionParameter>] f:'T -> int) = 
       match source with 
-         | [] -> invalidArg "source" LanguagePrimitives.ErrorStrings.InputSequenceEmptyString
+         | [] -> invalidArg "source" "cant be empty"
          | xs ->
-             let mutable sum = LanguagePrimitives.GenericZero< 'U >
+             let mutable sum = 0
              let mutable count = 0
              for x in xs do
                  sum <- Checked.(+) sum (f x)
                  count <- count + 1
-             sum 
+             sum / count
 
 
    [<CustomOperation("contains", MaintainsVariableSpace=true)>]
-   member x.Contains ( source:List<'T>, [<ProjectionParameter>] v:'T )  = 
-      List.contains v source
+   member x.Contains ( source:List<'T>, [<ProjectionParameter>] v:'T -> 'T )  = 
+      List.exists (fun x -> x = v x) source
     
    [<CustomOperation("count", MaintainsVariableSpace=true)>]
    member x.Count ( source:List<'T>)  = 
@@ -196,10 +196,4 @@ type t = {
 let b = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
 
-let mb = fablequery {
-   for a in b do
-   leftOuterJoin bb in s on (a.a = bb.a)  into group 
-   
-   select group
-} 
 

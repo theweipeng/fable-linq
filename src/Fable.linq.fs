@@ -77,10 +77,6 @@ type FableQueryBuilder() =
    [<CustomOperation("exactlyOne", MaintainsVariableSpace=true)>]
    member x.ExactlyOne ( source:List<'T>)  = 
       List.exactlyOne source
-   
-   [<CustomOperation("exactlyOneOrDefault", MaintainsVariableSpace=true)>]
-   member x.ExactlyOneOrDefault ( source:List<'T>)  = 
-      List.exactlyOne source  //todo
        
    [<CustomOperation("exists", MaintainsVariableSpace=true)>]
    member x.Exists ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
@@ -106,11 +102,11 @@ type FableQueryBuilder() =
    member x.Join (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'U)  = 
       let mutable ret = []
       for x in outer do
-         let m = inner |> List.find (fun y -> 
+         let m = inner |> List.tryFind (fun y -> 
             outerKeySelector x = innerKeySelector y
          ) 
-         if Some(m).IsNone |> not then
-            ret <-  (resultSelector m x) :: ret
+         if m.IsNone |> not then
+            ret <-  (resultSelector m.Value x) :: ret
       ret
    
    [<CustomOperation("leftOuterJoin", IsLikeGroupJoin=true)>]
@@ -183,17 +179,10 @@ type FableQueryBuilder() =
    member x.Zero ()  = 
       List.empty
 
+   member x.Return() =
+      []
+   
+   member x.Bind() =
+      []
+
 let fablequery = FableQueryBuilder()
-
-type m = {
-   a: int
-   b: string
-}
-type t = {
-   mutable source: int
-   mutable value: string
-}
-let b = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
-let s = [{a = 1; b ="1"};{a = 2; b ="1"};{a = 3; b ="1"};{a = 4; b ="1"}]
-
-

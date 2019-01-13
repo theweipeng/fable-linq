@@ -4,6 +4,7 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Linq.Main
 open Fable.Core.Testing
+open System.Collections.Generic
 
 [<Global>]
 let it (msg: string) (f: unit->unit): unit = jsNative
@@ -175,4 +176,86 @@ it "contains works" <| fun () ->
     }
     Assert.AreEqual(y, false)
 
-    
+
+it "count works" <| fun () ->
+    let x = [4;7;9;5;8]
+    let y = fablequery {
+        for s in x do 
+        count 
+    }
+    Assert.AreEqual(y, 5)
+
+
+it "distinct works" <| fun () ->
+    let x = [1;1;2;2]
+    let y = fablequery {
+        for s in x do 
+        distinct 
+    }
+    Assert.AreEqual(y.Length, 2) 
+    Assert.AreEqual(List.contains 1 y, true)
+    Assert.AreEqual(List.contains 2 y, true)
+
+
+it "exactlyOne works" <| fun () ->
+    let x = [1]
+    let y = fablequery {
+        for s in x do 
+        exactlyOne 
+    }
+    Assert.AreEqual(y, 1) 
+
+it "exists works" <| fun () ->
+    let x = [1]
+    let y = fablequery {
+        for s in x do 
+        exists (s=1)
+    }
+    let z = fablequery {
+        for s in x do 
+        exists (s=2)
+    }
+    Assert.AreEqual(y, true) 
+    Assert.AreEqual(z, false) 
+
+
+it "find works" <| fun () ->
+    let x = [1;2;3]
+    let y = fablequery {
+        for s in x do 
+        find (s=1)
+    }
+    Assert.AreEqual(y, 1) 
+    try
+        let z = fablequery {
+            for s in x do 
+            find (s=4)
+        }
+        let s = Some z
+        Assert.AreEqual(false, true) 
+    with
+        | _ -> Assert.AreEqual(true, true) 
+
+
+
+it "join works" <| fun () ->
+    let x = [{bar=1}; {bar=2};{bar=3};{bar=4}]
+    let y = [{bar=5}; {bar=2};{bar=3};{bar=4}]
+    let k = fablequery {
+        for s in x do 
+        join m in y on (s.bar=m.bar) 
+        select (s.bar, m)
+    }
+    for m in k do
+        sprintf "%s" "fergfegfe"
+        match m with
+            | (4, a) ->
+                Assert.AreEqual(a, y.[3])
+            | (2, b) ->
+                Assert.AreEqual(b, y.[1])
+            | (3, c) ->
+                Assert.AreEqual(c, y.[2])
+            | (1, c) ->
+               Assert.AreEqual(false, true)
+            | (5, c) ->
+               Assert.AreEqual(false, true)

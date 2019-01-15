@@ -137,7 +137,7 @@ type FableQueryBuilder() =
       let mutable ret = []
       for x in groupRet do
          match x with
-            | (a, b) -> ret <- [(a, List.map resultSelector b)]
+            | (a, b) -> ret <- (a, List.map resultSelector b) :: ret
       ret
 
    [<CustomOperation("minBy")>]
@@ -179,11 +179,5 @@ type FableQueryBuilder() =
    [<CustomOperation("zero")>]
    member x.Zero ()  = 
       List.empty
-
-   member x.Return() =
-      []
-   
-   member x.Bind() =
-      []
 
 let fablequery = FableQueryBuilder()

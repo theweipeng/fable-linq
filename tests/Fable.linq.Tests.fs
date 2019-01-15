@@ -300,3 +300,26 @@ it "groupJoin works" <| fun () ->
                 Assert.AreEqual(c.[1], y.[4])
             | (1, c) ->
                Assert.AreEqual(c.Length, 0)
+
+
+it "groupValBy works" <| fun () ->
+    let x = [{bar=1}; {bar=2};{bar=2};{bar=3};{bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        groupValBy s s.bar into p
+        select p
+    }
+    for m in k do
+        match m with
+            | (2, b) ->
+                Assert.AreEqual(b.Length, 2)
+                Assert.AreEqual(List.contains x.[1] b, true)
+                Assert.AreEqual(List.contains x.[2] b, true)
+            | (3, c) ->
+                Assert.AreEqual(c.Length, 3)
+                Assert.AreEqual(List.contains x.[3] c, true)
+                Assert.AreEqual(List.contains x.[4] c, true)
+                Assert.AreEqual(List.contains x.[5] c, true)
+            | (1, c) ->
+               Assert.AreEqual(c.Length, 1)
+               Assert.AreEqual(x.[0], c.[0])

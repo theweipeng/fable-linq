@@ -102,21 +102,21 @@ type FableQueryBuilder() =
    member x.Join (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'U)  = 
       let mutable ret = []
       for x in outer do
-         let m = inner |> List.tryFind (fun y -> 
+         let m = inner |> List.filter (fun y -> 
             outerKeySelector x = innerKeySelector y
-         ) 
-         if m.IsNone |> not then
-            ret <-  (resultSelector m.Value x) :: ret
+         )
+         for y in m do
+            ret <-  (resultSelector x y) :: ret
       ret
    
    [<CustomOperation("leftOuterJoin", IsLikeGroupJoin=true)>]
-   member x.LeftOuterJoin (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'U)  = 
+   member x.LeftOuterJoin (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector:  'T -> List<'T> -> 'U)  = 
       let mutable ret = []
       for x in outer do
-         let m = inner |> List.find (fun y -> 
+         let m = inner |> List.filter (fun y -> 
             outerKeySelector x = innerKeySelector y
          ) 
-         ret <-  (resultSelector m x) :: ret
+         ret <-  (resultSelector x m) :: ret
       ret
    
    [<CustomOperation("groupValBy", AllowIntoPattern=true, MaintainsVariableSpace=true)>]

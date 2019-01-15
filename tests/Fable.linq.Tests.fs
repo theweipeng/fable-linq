@@ -280,3 +280,23 @@ it "leftOuterJoin works" <| fun () ->
                 Assert.AreEqual(c.[1], y.[4])
             | (1, c) ->
                Assert.AreEqual(c.Length, 0)
+
+it "groupJoin works" <| fun () ->
+    let x = [{bar=1}; {bar=2};{bar=3};{bar=4}]
+    let y = [{bar=5}; {bar=2};{bar=3};{bar=4};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        leftOuterJoin m in y on (s.bar=m.bar)  into p
+        select (s.bar, p)
+    }
+    for m in k do
+        match m with
+            | (4, a) ->
+                Assert.AreEqual(a.[0], y.[3])
+            | (2, b) ->
+                Assert.AreEqual(b.[0], y.[1])
+            | (3, c) ->
+                Assert.AreEqual(c.[0], y.[2])
+                Assert.AreEqual(c.[1], y.[4])
+            | (1, c) ->
+               Assert.AreEqual(c.Length, 0)

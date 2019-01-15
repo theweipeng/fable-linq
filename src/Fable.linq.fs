@@ -119,6 +119,18 @@ type FableQueryBuilder() =
          ret <-  (resultSelector x m) :: ret
       ret
    
+
+
+   [<CustomOperation("groupJoin", IsLikeGroupJoin=true, MaintainsVariableSpace=true)>]
+   member x.GroupJoin (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> List<'T> -> 'U)  = 
+      let mutable ret = []
+      for x in outer do
+         let m = inner |> List.filter (fun y -> 
+            outerKeySelector x = innerKeySelector y
+         ) 
+         ret <-  (resultSelector x m) :: ret
+      ret
+
    [<CustomOperation("groupValBy", AllowIntoPattern=true, MaintainsVariableSpace=true)>]
    member x.GroupValBy<'T,'Key,'Result when 'Key : equality > (source:List<'T>, [<ProjectionParameter>]resultSelector: 'T -> 'Result, [<ProjectionParameter>]keySelector: 'T -> 'Key)    = 
       let groupRet = source |> List.groupBy keySelector
@@ -128,17 +140,6 @@ type FableQueryBuilder() =
             | (a, b) -> ret <- [(a, List.map resultSelector b)]
       ret
 
-   [<CustomOperation("groupJoin", IsLikeGroupJoin=true, MaintainsVariableSpace=true)>]
-   member x.GroupJoin (outer : List<'T>, inner: List<'T>, outerKeySelector, innerKeySelector, resultSelector: 'T -> 'T -> 'T * 'T)  = 
-      let mutable ret = []
-      for x in outer do
-         let m = inner |> List.find (fun y -> 
-            outerKeySelector x = innerKeySelector y
-         ) 
-         if Some(m).IsNone |> not then
-            ret <-  (resultSelector m x) :: ret
-      ret
-      
    [<CustomOperation("minBy")>]
    member x.MinBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.minBy f source

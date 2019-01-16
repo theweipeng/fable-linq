@@ -1,10 +1,8 @@
 module Fable.Linq.Tests
 
 open Fable.Core
-open Fable.Core.JsInterop
 open Fable.Linq.Main
 open Fable.Core.Testing
-open System.Collections.Generic
 
 [<Global>]
 let it (msg: string) (f: unit->unit): unit = jsNative

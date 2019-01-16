@@ -147,25 +147,21 @@ type FableQueryBuilder() =
    [<CustomOperation("maxBy")>]
    member x.MaxBy (source:List<'T>, [<ProjectionParameter>] f:'T -> 'U)  = 
       List.maxBy f source
-   
-   [<CustomOperation("nth")>]
-   member x.Nth (source:List<'T>, [<ProjectionParameter>] i: int)  = 
-      List.item i source 
 
    [<CustomOperation("head")>]
-   member x.Head ()  = 
-      List.head
+   member x.Head (source:List<'T>)  = 
+      List.head source
 
    [<CustomOperation("last")>]
-   member x.Last ()  = 
-      List.last
+   member x.Last (source:List<'T>)  = 
+      List.last source
 
    [<CustomOperation("skip")>]
-   member x.Skip (v:int)  = 
-      List.skip v
+   member x.Skip (source:List<'T>, v:int)  = 
+      List.skip v source
    
    [<CustomOperation("skipWhile")>]
-   member x.SkipWhile (source:List<'T>, f:'T -> bool)  = 
+   member x.SkipWhile (source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
       List.skipWhile f source
 
    [<CustomOperation("take")>]
@@ -173,11 +169,10 @@ type FableQueryBuilder() =
       List.take v source
 
    [<CustomOperation("takeWhile")>]
-   member x.TakeWhile (source:List<'T>, f:'T -> bool)  = 
+   member x.TakeWhile (source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
       List.takeWhile f source
 
-   [<CustomOperation("zero")>]
-   member x.Zero ()  = 
-      List.empty
-
+   [<CustomOperation("nth")>]
+   member x.Nth (source:List<'T>, i: int)  = 
+      List.item i source
 let fablequery = FableQueryBuilder()

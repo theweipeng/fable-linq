@@ -341,3 +341,70 @@ it "maxBy works" <| fun () ->
         minBy s.bar
     }
     Assert.AreEqual(k, x.[5])
+
+it "head works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        head
+    }
+    Assert.AreEqual(k, x.[0])
+
+it "last works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        last
+    }
+    Assert.AreEqual(k, x.[5])
+
+it "skip works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        skip 3
+    }
+    Assert.AreEqual(k.Length, 2)
+    Assert.AreEqual(k.[0], x.[4])
+    Assert.AreEqual(k.[1], x.[5])
+
+it "skipWhile works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        skipWhile (s.bar = 3)
+    }
+    Assert.AreEqual(k.Length, 3)
+    Assert.AreEqual(k.[0], x.[0])
+    Assert.AreEqual(k.[1], x.[1])
+    Assert.AreEqual(k.[2], x.[3])
+
+it "take works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        take 3
+    }
+    Assert.AreEqual(k.Length, 3)
+    Assert.AreEqual(k.[0], x.[0])
+    Assert.AreEqual(k.[1], x.[1])
+    Assert.AreEqual(k.[2], x.[2])
+
+it "takeWhile works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        takeWhile (s.bar = 3)
+    }
+    Assert.AreEqual(k.Length, 3)
+    Assert.AreEqual(k.[0], x.[2])
+    Assert.AreEqual(k.[1], x.[4])
+    Assert.AreEqual(k.[2], x.[5])
+
+it "nth works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        nth 3
+    }
+    Assert.AreEqual(k, x.[3])

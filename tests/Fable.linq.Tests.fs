@@ -362,12 +362,13 @@ it "skip works" <| fun () ->
         for s in x do 
         skip 3
     }
-    Assert.AreEqual(k.Length, 2)
-    Assert.AreEqual(k.[0], x.[4])
-    Assert.AreEqual(k.[1], x.[5])
+    Assert.AreEqual(k.Length, 3)
+    Assert.AreEqual(k.[0], x.[3])
+    Assert.AreEqual(k.[1], x.[4])
+    Assert.AreEqual(k.[2], x.[5])
 
 it "skipWhile works" <| fun () ->
-    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3}]
     let k = fablequery {
         for s in x do 
         skipWhile (s.bar = 3)

@@ -323,3 +323,21 @@ it "groupValBy works" <| fun () ->
             | (1, c) ->
                Assert.AreEqual(c.Length, 1)
                Assert.AreEqual(x.[0], c.[0])
+
+
+
+it "minBy works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        minBy s.bar
+    }
+    Assert.AreEqual(k, x.[3])
+
+it "maxBy works" <| fun () ->
+    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let k = fablequery {
+        for s in x do 
+        minBy s.bar
+    }
+    Assert.AreEqual(k, x.[5])

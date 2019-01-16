@@ -75,7 +75,7 @@ type FableQueryBuilder() =
       List.distinct source
    
    [<CustomOperation("exactlyOne", MaintainsVariableSpace=true)>]
-   member x.ExactlyOne ( source:List<'T>)  = 
+   member x.ExactlyOne (source:List<'T>)  = 
       List.exactlyOne source
        
    [<CustomOperation("exists", MaintainsVariableSpace=true)>]

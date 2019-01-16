@@ -368,15 +368,13 @@ it "skip works" <| fun () ->
     Assert.AreEqual(k.[2], x.[5])
 
 it "skipWhile works" <| fun () ->
-    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3}]
+    let x = [1.;2.;3.;4.]
     let k = fablequery {
         for s in x do 
-        skipWhile (s.bar = 3)
+        skipWhile (s <= 3.)
     }
-    Assert.AreEqual(k.Length, 3)
-    Assert.AreEqual(k.[0], x.[0])
-    Assert.AreEqual(k.[1], x.[1])
-    Assert.AreEqual(k.[2], x.[3])
+    Assert.AreEqual(k.Length, 1)
+    Assert.AreEqual(k.[0], x.[3])
 
 it "take works" <| fun () ->
     let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
@@ -390,15 +388,15 @@ it "take works" <| fun () ->
     Assert.AreEqual(k.[2], x.[2])
 
 it "takeWhile works" <| fun () ->
-    let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]
+    let x = [1.;2.;3.;4.]
     let k = fablequery {
         for s in x do 
-        takeWhile (s.bar = 3)
+        takeWhile (s <= 3.)
     }
     Assert.AreEqual(k.Length, 3)
-    Assert.AreEqual(k.[0], x.[2])
-    Assert.AreEqual(k.[1], x.[4])
-    Assert.AreEqual(k.[2], x.[5])
+    Assert.AreEqual(k.[0], x.[0])
+    Assert.AreEqual(k.[1], x.[1])
+    Assert.AreEqual(k.[2], x.[2])
 
 it "nth works" <| fun () ->
     let x = [{bar=2};{bar=2};{bar=3};{bar=1}; {bar=3};{bar=3}]

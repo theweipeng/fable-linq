@@ -15,7 +15,8 @@ it "where works" <| fun () ->
     let x = [1;2;3;4;5;6;7;8]
     let y = fablequery {
         for s in x do 
-        where (s > 5)
+        let y = s
+        where (y > 5)
     }
     Assert.AreEqual(y.Length, 3)
 

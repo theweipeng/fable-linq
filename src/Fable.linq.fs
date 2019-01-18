@@ -2,7 +2,7 @@ module Fable.Linq.Main
 
 
 type FableQueryBuilder() = 
-   member x.For(tz:List<'T>, f:'T -> 'T) : List<'T> = 
+   member x.For(tz:List<'T>, f:'T -> 'U) : List<'U> = 
       List.map (f) tz
    member x.Yield(v:'T) : 'T = 
       v

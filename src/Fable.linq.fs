@@ -2,10 +2,9 @@ module Fable.Linq.Main
 
 
 type FableQueryBuilder() = 
-   member x.For(tz:List<'T>, f:'T -> 'U) : List<'U> = 
-      List.map (f) tz
-   member x.Yield(v:'T) : 'T = 
-      v
+   member x.For(tz:List<'T>, f:'T -> List<'U>) : List<'U> = 
+      List.collect f tz
+   member x.Yield(v:'T) : List<'T> = [v]
 
    [<CustomOperation("where", MaintainsVariableSpace=true)>]
    member x.Where ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool ) : List<'T> = 

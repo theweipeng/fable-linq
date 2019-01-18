@@ -86,18 +86,6 @@ type FableQueryBuilder() =
    member x.Find ( source:List<'T>, [<ProjectionParameter>] f:'T -> bool)  = 
       List.find f source
 
-   // member this.HeadOrDefault : List<'T> -> 'T = jsNative
-   // member this.LastOrDefault : List<'T> -> 'T = jsNative
-   // member this.MaxByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
-   // member this.MinByNullable : List<'T> * ('T -> Nullable<'Value>) -> Nullable<'Value> = jsNative
-   // member this.Quote : Expr<'T> -> Expr<'T> = jsNative
-   // member this.Run : Expr<QuerySource<'T,IQueryable>> -> IQueryable<'T> = jsNative
-   // member this.SortByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
-   // member this.SortByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
-   // member this.SumByNullable : List<'T> * ('T -> Nullable<^Value>) -> Nullable<^Value> = jsNative
-   // member this.ThenByNullable : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
-   // member this.ThenByNullableDescending : List<'T> * ('T -> Nullable<'Key>) -> List<'T> = jsNative
-   // member this.YieldFrom : List<'T> -> List<'T> = jsNative
    [<CustomOperation("join", IsLikeJoin=true, MaintainsVariableSpace=true)>]
    member x.Join (outer : List<'T>, inner: List<'T>, [<ProjectionParameter>]outerKeySelector, [<ProjectionParameter>]innerKeySelector, [<ProjectionParameter>]resultSelector: 'T -> 'T -> 'U)  = 
       let mutable ret = []

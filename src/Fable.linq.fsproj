@@ -3,7 +3,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="*.fsproj; *.fs" />
     <Compile Include="Fable.linq.fs" />
   </ItemGroup>
     <Import Project="..\.paket\Paket.Restore.targets" />

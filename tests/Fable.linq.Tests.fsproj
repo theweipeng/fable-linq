@@ -6,6 +6,8 @@
     <Compile Include="Fable.linq.Tests.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../src/Fable.linq.fsproj" />
+    </ItemGroup>
     <Import Project="..\.paket\Paket.Restore.targets" />
-
 </Project>

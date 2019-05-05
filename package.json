@@ -5,16 +5,14 @@
     },
     "private": true,
     "devDependencies": {
-        "babel-core": "^6.26.3",
-        "babel-loader": "^8.0.4",
-        "fable-loader": "^2.1.2",
-        "isomorphic-fetch": "^2.2.1",
-        "mocha": "^5.2.0",
-        "webpack": "^4.28.2",
-        "webpack-cli": "^3.1.2",
         "@babel/cli": "^7.1.2",
         "@babel/core": "^7.1.2",
-        "fable-compiler": "^2.1.0-beta-003",
-        "fable-splitter": "^2.0.1"
+        "babel-core": "^6.26.3",
+        "babel-loader": "^8.0.4",
+        "fable-compiler": "latest",
+        "fable-loader": "latest",
+        "mocha": "^5.2.0",
+        "webpack": "^4.28.2",
+        "webpack-cli": "^3.1.2"
     }
 }

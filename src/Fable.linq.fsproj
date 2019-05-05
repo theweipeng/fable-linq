@@ -6,8 +6,6 @@
     <Content Include="*.fsproj; *.fs" />
     <Compile Include="Fable.linq.fs" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Fable.Core" Version="2.0.2" />
-    <PackageReference Include="Fable.Import.Browser" Version="1.1.2" />
-  </ItemGroup>
+    <Import Project="..\.paket\Paket.Restore.targets" />
+
 </Project>

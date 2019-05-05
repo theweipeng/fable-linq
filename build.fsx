@@ -14,7 +14,7 @@ open System.Text.RegularExpressions
 System.Console.OutputEncoding <- System.Text.Encoding.UTF8
 #endif
 
-let dotnetcliVersion = "2.0.0"
+let dotnetcliVersion = "2.2.105"
 
 let mutable dotnetExePath = "dotnet"
 
